@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 int options[24][4] = {
 	{0, 1, 2, 3},
@@ -81,16 +82,16 @@ int time_valid(int time) {
 int time_make_options(int time, int opts[]) {
 	int digits[4];
 	int time_temp = time;
-	int i, j, res;
+	int i, j = 0, res;
 	for (i = 0; i < 4; i++) {
 		digits[i] = time_temp % 10;
 		time_temp /= 10;
 	}
 	for (i = 0; i < 24; i++) {
-		res = digits[0] * options[i][0];
-		res += digits[1] * options[i][1];
-		res += digits[2] * options[i][2];
-		res += digits[3] * options[i][3];
+		res = digits[0] * pow(10, options[i][0]);
+		res += digits[1] * pow(10, options[i][1]);
+		res += digits[2] * pow(10, options[i][2]);
+		res += digits[3] * pow(10, options[i][3]);
 		if (time_valid(res)) {
 			opts[j++] = res;
 		}
