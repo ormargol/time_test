@@ -62,7 +62,7 @@ int time_sub(int time1, int time2) {
 	int m = time1 % 100 - time2 % 100;
 	if (m < 0) {
 		m += 60;
-		h++;
+		h--;
 	}
 	return h * 100 + m;
 }
@@ -99,6 +99,18 @@ int time_make_options(int time, int opts[]) {
 	return j;
 }
 
+void time_print(int time) {
+	int h = time / 100;
+	int m = time % 100;
+	if (h < 10) {
+		printf("0");
+	}
+	printf("%d:", h);
+	if (m < 10) {
+		printf("0");
+	}
+	printf("%d", m);
+}
 int main(int argc, char** argv) {
 	int h,m, time, i, size, sum, sub1, sub2;
 	int opts[23];
@@ -111,13 +123,19 @@ int main(int argc, char** argv) {
 				sub1 = time_sub(time, opts[i]);
 				sub2 = time_sub(opts[i], time);
 				if (time_valid(sum) && time_same_digits(time, sum)) {
-					printf("%d + %d = %d\n", time, opts[i], sum);
+					//printf("%d:%d + %d:%d = %d:%d\n", time / 100, time % 100, opts[i] / 100, opts[i] % 100, sum / 100, sum % 100);
+					time_print(time);
+					printf(" + ");
+					time_print(opts[i]);
+					printf(" = ");
+					time_print(sum);
+					printf("\n");
 				}
 				if (time_valid(sub1) && time_same_digits(time, sub1)) {
-					printf("%d - %d = %d\n", time, opts[i], sub1);
+					printf("%d:%d - %d:%d = %d:%d\n", time / 100, time % 100, opts[i] / 100, opts[i] % 100, sub1 / 100, sub1 % 100);
 				}
 				if (time_valid(sub2) && time_same_digits(time, sub2)) {
-					printf("%d - %d = %d\n", opts[i], time, sub2);
+					printf("%d:%d - %d:%d = %d:%d\n", opts[i] / 100, opts[i] % 100, time / 100, time % 100, sub2 / 100, sub2 % 100);
 				}
 			}
 		}
