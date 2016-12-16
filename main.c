@@ -1,31 +1,30 @@
 #include <stdio.h>
-#include <math.h>
 
 int options[24][4] = {
-	{0, 1, 2, 3},
-	{0, 1, 3, 2},
-	{0, 2, 1, 3},
-	{0, 2, 3, 1},
-	{0, 3, 1, 2},
-	{0, 3, 2, 1},
-	{1, 0, 2, 3},
-	{1, 0, 3, 2},
-	{1, 2, 0, 3},
-	{1, 2, 3, 0},
-	{1, 3, 0, 2},
-	{1, 3, 2, 0},
-	{2, 0, 1, 3},
-	{2, 0, 3, 1},
-	{2, 1, 0, 3},
-	{2, 1, 3, 0},
-	{2, 3, 0, 1},
-	{2, 3, 1, 0},
-	{3, 0, 1, 2},
-	{3, 0, 2, 1},
-	{3, 1, 0, 2},
-	{3, 1, 2, 0},
-	{3, 2, 0, 1},
-	{3, 2, 1, 0}
+	{1, 10, 100, 1000},
+	{1, 10, 1000, 100},
+	{1, 100, 10, 1000},
+	{1, 100, 1000, 10},
+	{1, 1000, 10, 100},
+	{1, 1000, 100, 10},
+	{10, 1, 100, 1000},
+	{10, 1, 1000, 100},
+	{10, 100, 1, 1000},
+	{10, 100, 1000, 1},
+	{10, 1000, 1, 100},
+	{10, 1000, 100, 1},
+	{100, 1, 10, 1000},
+	{100, 1, 1000, 10},
+	{100, 10, 1, 1000},
+	{100, 10, 1000, 1},
+	{100, 1000, 1, 10},
+	{100, 1000, 10, 1},
+	{1000, 1, 10, 100},
+	{1000, 1, 100, 10},
+	{1000, 10, 1, 100},
+	{1000, 10, 100, 1},
+	{1000, 100, 1, 10},
+	{1000, 100, 10, 1}
 };
 
 int sort_digits(int time) {
@@ -78,10 +77,10 @@ int time_make_options(int time, int opts[]) {
 		time_temp /= 10;
 	}
 	for (i = 0; i < 24; i++) {
-		res = digits[0] * pow(10, options[i][0]);
-		res += digits[1] * pow(10, options[i][1]);
-		res += digits[2] * pow(10, options[i][2]);
-		res += digits[3] * pow(10, options[i][3]);
+		res = digits[0] * options[i][0];
+		res += digits[1] * options[i][1];
+		res += digits[2] * options[i][2];
+		res += digits[3] * options[i][3];
 		if (time_valid(res)) {
 			opts[j++] = res;
 		}
@@ -102,8 +101,11 @@ void time_print(int time) {
 	printf("%d", m);
 }
 int main(int argc, char** argv) {
-	int h,m, time, i, size, sum;
+	int h,m, time, i, j, size, sum;
 	int opts[23];
+	int res1[100], res2[100];
+	int res_count = 0;
+	int flag_found;
 	for (h = 0; h < 24; h++) {
 		for (m = 0; m < 60; m++) {
 			time = 100 * h + m;
@@ -111,12 +113,23 @@ int main(int argc, char** argv) {
 			for (i = 0; i < size; i++) {
 				sum = time_sum(time, opts[i]);
 				if (time_valid(sum) && time_same_digits(time, sum)) {
-					time_print(time);
-					printf(" + ");
-					time_print(opts[i]);
-					printf(" = ");
-					time_print(sum);
-					printf("\n");
+					flag_found = 0;
+					for (j = 0; j < res_count && !flag_found; j++) {
+						if (time == res1[j] && opts[i] == res2[j]) {
+							flag_found = 1;
+						}
+					}
+					if (!flag_found) {
+						res1[res_count] = time;
+						res2[res_count] = opts[i];
+						res_count++;
+						time_print(time);
+						printf(" + ");
+						time_print(opts[i]);
+						printf(" = ");
+						time_print(sum);
+						printf("\n");
+					}
 				}
 			}
 		}
